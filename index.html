@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relações Públicas do Complexo - Simulador</title>
+    <title>Relações Públicas do Complexo - Simulador v2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,13 +11,13 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #111827; /* bg-gray-900 */
+            background-color: #111827;
         }
         .font-orbitron {
             font-family: 'Orbitron', sans-serif;
         }
         .blood-vial {
-            border: 2px solid #4b5563; /* border-gray-600 */
+            border: 2px solid #4b5563;
             border-radius: 10px 10px 50px 50px;
             height: 150px;
             width: 80px;
@@ -34,39 +34,25 @@
             border-radius: 0 0 45px 45px;
             transition: all 0.5s ease-in-out;
         }
-        .bg-healthy { background-color: #dc2626; } /* red-600 */
+        .bg-healthy { background-color: #dc2626; }
         .bg-met-virus { 
-            background-color: #374151; /* gray-700 */
+            background-color: #374151;
             animation: bubble 2s linear infinite;
         }
         .bg-met-rx { 
-            background-color: #22d3ee; /* cyan-400 */
+            background-color: #22d3ee;
             box-shadow: 0 0 15px #22d3ee;
         }
         .bg-fusion-bad {
-            background-color: #581c87; /* purple-900 */
+            background-color: #581c87;
             animation: bubble-fast 1s linear infinite;
         }
         .bg-fusion-good {
             background: linear-gradient(180deg, #be185d 0%, #86198f 100%);
         }
         .bg-cure-complete {
-            background: linear-gradient(180deg, #fde047 0%, #facc15 100%); /* yellow-300 to yellow-400 */
+            background: linear-gradient(180deg, #fde047 0%, #facc15 100%);
             animation: glow 1.5s infinite alternate;
-        }
-        @keyframes bubble {
-            0% { box-shadow: inset 0 0 5px rgba(255,255,255,0.2); }
-            50% { box-shadow: inset 0 0 15px rgba(255,255,255,0.4); }
-            100% { box-shadow: inset 0 0 5px rgba(255,255,255,0.2); }
-        }
-         @keyframes bubble-fast {
-            0% { box-shadow: inset 0 0 10px rgba(255,255,255,0.5), 0 0 10px #a855f7; }
-            50% { box-shadow: inset 0 0 25px rgba(255,255,255,0.7), 0 0 20px #a855f7; }
-            100% { box-shadow: inset 0 0 10px rgba(255,255,255,0.5), 0 0 10px #a855f7; }
-        }
-        @keyframes glow {
-            from { box-shadow: 0 0 10px #facc15, 0 0 20px #fde047; }
-            to { box-shadow: 0 0 20px #facc15, 0 0 30px #fde047; }
         }
         .btn {
             transition: all 0.3s ease;
@@ -87,12 +73,23 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .level-card {
+        .scenario-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .level-card:hover {
+        .scenario-card:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px var(--glow-color);
+            box-shadow: 0 0 25px var(--glow-color);
+        }
+        .progress-bar {
+            background-color: #374151;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 20px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.5s ease-in-out;
         }
     </style>
 </head>
@@ -102,167 +99,48 @@
         
         <header class="text-center mb-10 border-b-2 border-cyan-500/30 pb-4">
             <h1 class="font-orbitron text-4xl md:text-5xl font-bold text-cyan-400">Relações Públicas do Complexo</h1>
-            <p class="text-lg text-gray-400 mt-2">Simulador de Fusão Viral: MET-Vírus25</p>
+            <p class="text-lg text-gray-400 mt-2">Simulador de Crise Viral-Radioativa v2</p>
         </header>
 
-        <section id="contamination-level-step">
-            <h2 class="text-2xl font-semibold mb-6 text-center">1. Selecione o Nível de Contaminação da Chuva (CHV)</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div onclick="selectContaminationLevel(1)" class="level-card cursor-pointer bg-gray-800 p-6 rounded-lg border-2 border-green-500" style="--glow-color: #22c55e;">
-                    <h3 class="font-orbitron text-xl font-bold text-green-400 mb-2">Nível 1 – Leve</h3>
-                    <p class="text-sm text-gray-400">pH: 6,5 – 6,8</p>
-                    <p class="text-sm text-gray-400">Efeitos: Náuseas leves, tontura.</p>
+        <!-- Main Menu -->
+        <section id="main-menu">
+            <h2 class="text-2xl font-semibold mb-6 text-center">Selecione o Cenário da Simulação</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div onclick="selectScenario('fusion')" class="scenario-card cursor-pointer bg-gray-800 p-6 rounded-lg border-2 border-pink-500" style="--glow-color: #ec4899;">
+                    <h3 class="font-orbitron text-xl font-bold text-pink-400 mb-2">Fusão Viral</h3>
+                    <p class="text-sm text-gray-400">Teste a fusão do MET-Vírus25 com sangue saudável ou o antídoto MET-RX em laboratório.</p>
                 </div>
-                <div onclick="selectContaminationLevel(2)" class="level-card cursor-pointer bg-gray-800 p-6 rounded-lg border-2 border-yellow-500" style="--glow-color: #eab308;">
-                    <h3 class="font-orbitron text-xl font-bold text-yellow-400 mb-2">Nível 2 – Moderada</h3>
-                    <p class="text-sm text-gray-400">pH: 5,5 – 6,0</p>
-                    <p class="text-sm text-gray-400">Efeitos: Queimaduras leves, vômito, febre.</p>
+                <div onclick="selectScenario('containment')" class="scenario-card cursor-pointer bg-gray-800 p-6 rounded-lg border-2 border-green-500" style="--glow-color: #22c55e;">
+                    <h3 class="font-orbitron text-xl font-bold text-green-400 mb-2">Contenção Ambiental</h3>
+                    <p class="text-sm text-gray-400">Aplique estratégias de contenção em amostras de solo e água contaminados com Urânio-235.</p>
                 </div>
-                 <div onclick="selectContaminationLevel(3)" class="level-card cursor-pointer bg-gray-800 p-6 rounded-lg border-2 border-orange-500" style="--glow-color: #f97316;">
-                    <h3 class="font-orbitron text-xl font-bold text-orange-400 mb-2">Nível 3 – Grave</h3>
-                    <p class="text-sm text-gray-400">pH: 4,5 – 5,0</p>
-                    <p class="text-sm text-gray-400">Efeitos: Queimaduras graves, infecção rápida.</p>
-                </div>
-                 <div onclick="selectContaminationLevel(4)" class="level-card cursor-pointer bg-gray-800 p-6 rounded-lg border-2 border-red-500" style="--glow-color: #ef4444;">
-                    <h3 class="font-orbitron text-xl font-bold text-red-400 mb-2">Nível 4 – Crítica</h3>
-                    <p class="text-sm text-gray-400">pH: ≤ 4,0</p>
-                    <p class="text-sm text-gray-400">Efeitos: Infecção imediata e fatal.</p>
+                <div onclick="selectScenario('patient')" class="scenario-card cursor-pointer bg-gray-800 p-6 rounded-lg border-2 border-yellow-500" style="--glow-color: #eab308;">
+                    <h3 class="font-orbitron text-xl font-bold text-yellow-400 mb-2">Tratamento de Pacientes</h3>
+                    <p class="text-sm text-gray-400">Administre o MET-RX em pacientes humanos em diferentes estágios de contaminação.</p>
                 </div>
             </div>
         </section>
 
-        <section id="fusion-selection-step" class="text-center mt-10 hidden">
-            <h2 class="text-2xl font-semibold mb-6">2. Selecione o Procedimento de Fusão</h2>
-            <div class="flex flex-col md:flex-row justify-center items-center gap-6">
-                <button onclick="startSimulation('healthy')" class="btn bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-6 rounded-lg w-full md:w-auto">
-                    Fusão com Sangue Saudável
-                </button>
-                <button onclick="startSimulation('curative')" class="btn bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-6 rounded-lg w-full md:w-auto">
-                    Fusão com Sangue Curativo (MET-RX)
-                </button>
-            </div>
-        </section>
+        <!-- Dynamic Simulation Steps will be injected here -->
+        <div id="simulation-content"></div>
 
-        <section id="simulation-step" class="hidden">
-            <h2 id="simulation-title" class="text-2xl font-bold text-center mb-2"></h2>
-            <div id="contamination-status" class="text-center bg-gray-800/50 border border-gray-700 rounded-lg p-3 mb-6 max-w-4xl mx-auto"></div>
-            <div id="cure-percentage-display" class="text-center text-2xl font-orbitron text-yellow-300 mb-8 hidden"></div>
-            
-            <div id="fusion-visualization" class="flex justify-center items-center gap-8 mb-8">
-                 <div class="text-center">
-                    <div class="blood-vial mx-auto">
-                        <div id="sample1-content" class="blood-content"></div>
-                    </div>
-                    <p id="sample1-label" class="mt-2 font-semibold"></p>
-                </div>
-                <div class="text-5xl font-bold text-gray-500">+</div>
-                 <div class="text-center">
-                    <div class="blood-vial mx-auto">
-                        <div id="sample2-content" class="blood-content bg-met-virus"></div>
-                    </div>
-                    <p class="mt-2 font-semibold">MET-Vírus25</p>
-                </div>
-            </div>
-            
-            <div class="text-center mb-10">
-                 <button id="start-fusion-btn" onclick="runFusion()" class="btn bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-lg">
-                    Iniciar Fusão
-                </button>
-            </div>
-            
-            <div id="tests-division" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Teste CIE -->
-                <div class="bg-gray-800 p-6 rounded-lg border-2 border-gray-700">
-                    <h3 class="font-orbitron text-xl font-bold text-cyan-400 mb-2">Ciência (CIE)</h3>
-                    <p class="text-gray-400 mb-4 text-sm">Descreva sua ação científica para analisar a mistura.</p>
-                    <input type="text" id="cie-input" class="w-full bg-gray-900 border border-gray-600 rounded p-2 mb-3 text-white" placeholder="Ex: Usar microscópio eletrônico...">
-                    <button onclick="runAITest('cie')" class="btn w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2">
-                        <span class="text-btn">Executar Ação</span> <div class="loader hidden"></div>
-                    </button>
-                    <div id="cie-result" class="mt-3 text-sm text-gray-300"></div>
-                </div>
-                <!-- Teste ETC -->
-                <div class="bg-gray-800 p-6 rounded-lg border-2 border-gray-700">
-                    <h3 class="font-orbitron text-xl font-bold text-red-400 mb-2">Ética (ETC)</h3>
-                    <p class="text-gray-400 mb-4 text-sm">Como você mantém o controle e a segurança?</p>
-                    <input type="text" id="etc-input" class="w-full bg-gray-900 border border-gray-600 rounded p-2 mb-3 text-white" placeholder="Ex: Seguir protocolos de contenção a risca...">
-                    <button onclick="runAITest('etc')" class="btn w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2">
-                        <span class="text-btn">Executar Ação</span> <div class="loader hidden"></div>
-                    </button>
-                    <div id="etc-result" class="mt-3 text-sm text-gray-300"></div>
-                </div>
-                <!-- Teste LID -->
-                <div class="bg-gray-800 p-6 rounded-lg border-2 border-gray-700">
-                    <h3 class="font-orbitron text-xl font-bold text-yellow-400 mb-2">Liderança (LID)</h3>
-                    <p class="text-gray-400 mb-4 text-sm">Qual sua ordem ou estratégia para a equipe?</p>
-                    <input type="text" id="lid-input" class="w-full bg-gray-900 border border-gray-600 rounded p-2 mb-3 text-white" placeholder="Ex: Coordenar a equipe para ajustar a proporção...">
-                    <button onclick="runAITest('lid')" class="btn w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2">
-                        <span class="text-btn">Executar Ação</span> <div class="loader hidden"></div>
-                    </button>
-                    <div id="lid-result" class="mt-3 text-sm text-gray-300"></div>
-                </div>
-                <!-- Teste CAR -->
-                <div class="bg-gray-800 p-6 rounded-lg border-2 border-gray-700">
-                    <h3 class="font-orbitron text-xl font-bold text-green-400 mb-2">Carisma (CAR)</h3>
-                    <p class="text-gray-400 mb-4 text-sm">Como você documenta ou comunica os achados?</p>
-                    <input type="text" id="car-input" class="w-full bg-gray-900 border border-gray-600 rounded p-2 mb-3 text-white" placeholder="Ex: Gravar um relatório detalhado e otimista...">
-                    <button onclick="runAITest('car')" class="btn w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2">
-                        <span class="text-btn">Executar Ação</span> <div class="loader hidden"></div>
-                    </button>
-                    <div id="car-result" class="mt-3 text-sm text-gray-300"></div>
-                </div>
-            </div>
-             <div class="text-center mt-10">
-                 <button id="finish-fusion-btn" onclick="showResults()" class="hidden btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg text-lg">
-                    Finalizar e Ver Resultados
-                </button>
-            </div>
-        </section>
-
-        <section id="results-step" class="hidden text-center">
-            <h2 class="text-3xl font-bold mb-6">Resultados Finais da Fusão</h2>
-            <div class="flex flex-col md:flex-row items-center justify-center gap-8 bg-gray-800 p-8 rounded-lg border-2 border-gray-700">
-                <div class="text-center">
-                    <div class="blood-vial mx-auto" style="height: 200px; width: 100px;">
-                        <div id="result-content" class="blood-content"></div>
-                    </div>
-                    <p class="mt-2 font-semibold">Amostra Resultante</p>
-                </div>
-                <div id="results-log" class="text-left max-w-2xl w-full">
-                    <h3 id="result-title" class="text-2xl font-semibold mb-4"></h3>
-                    <div id="result-details" class="space-y-3 text-gray-300 max-h-96 overflow-y-auto pr-4"></div>
-                </div>
-            </div>
-            <button onclick="resetSimulation()" class="btn mt-8 bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-8 rounded-lg">
-                Iniciar Nova Simulação
+        <div class="text-center mt-12">
+            <button id="back-to-menu-btn" onclick="resetToMenu()" class="hidden btn bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-8 rounded-lg">
+                Voltar ao Menu Principal
             </button>
-        </section>
+        </div>
     </div>
 
     <script>
-        let currentSimulation = null;
-        let contaminationLevel = null;
-        let curePercentage = 0;
-        let simulationLog = [];
+        let currentScenario = null;
+        let simulationState = {};
 
         const ui = {
-            contaminationStep: document.getElementById('contamination-level-step'),
-            fusionSelectionStep: document.getElementById('fusion-selection-step'),
-            simulationStep: document.getElementById('simulation-step'),
-            resultsStep: document.getElementById('results-step'),
-            simulationTitle: document.getElementById('simulation-title'),
-            contaminationStatus: document.getElementById('contamination-status'),
-            curePercentageDisplay: document.getElementById('cure-percentage-display'),
-            sample1Content: document.getElementById('sample1-content'),
-            sample1Label: document.getElementById('sample1-label'),
-            startFusionBtn: document.getElementById('start-fusion-btn'),
-            testsDivision: document.getElementById('tests-division'),
-            finishFusionBtn: document.getElementById('finish-fusion-btn'),
-            resultContent: document.getElementById('result-content'),
-            resultTitle: document.getElementById('result-title'),
-            resultDetails: document.getElementById('result-details'),
+            mainMenu: document.getElementById('main-menu'),
+            simulationContent: document.getElementById('simulation-content'),
+            backToMenuBtn: document.getElementById('back-to-menu-btn'),
         };
-        
+
         const contaminationData = {
             1: { name: 'Nível 1 – Leve', details: 'pH: levemente ácido (6,5 – 6,8). Viscosidade: quase normal. Efeito no corpo: náuseas leves, tontura.' },
             2: { name: 'Nível 2 – Moderada', details: 'pH: ácido (5,5 – 6,0). Viscosidade: com microbolhas. Efeito no corpo: queimaduras leves, vômito, febre.' },
@@ -270,58 +148,232 @@
             4: { name: 'Nível 4 – Crítica', details: 'pH: extremamente ácido (≤ 4,0). Viscosidade: densa, quase como um gel negro. Efeito no corpo: infecção imediata e fatal.' }
         };
 
-        const simulationConfig = {
-            healthy: {
-                title: 'Fusão: Sangue Saudável + MET-Vírus25',
-                sampleLabel: 'Sangue Saudável',
-                sampleClass: 'bg-healthy',
-            },
-            curative: {
-                title: 'Fusão: Sangue Curativo MET-RX + MET-Vírus25',
-                sampleLabel: 'Sangue Curativo (MET-RX)',
-                sampleClass: 'bg-met-rx',
-            }
+        const patientStages = {
+            1: { name: 'Estágio 1 - Inicial', details: 'Náuseas, tontura, irritação ocular. Prognóstico reversível.' },
+            2: { name: 'Estágio 2 - Progressivo', details: 'Queimaduras cutâneas, queda de cabelo. Risco de sequelas.' },
+            3: { name: 'Estágio 3 - Avançado', details: 'Agressividade, confusão, delírios. Alto risco de morte.' },
+            4: { name: 'Estágio 4 - Crítico', details: 'Inconsciência, convulsões, falência de órgãos. Quase irreversível.' },
+            5: { name: 'Estágio 5 - Terminal/Mutagênico', details: 'Ataques de pânico, força anormal, psique animalizada. Fatal.' }
         };
 
-        function selectContaminationLevel(level) {
-            contaminationLevel = level;
-            ui.contaminationStep.classList.add('hidden');
-            ui.fusionSelectionStep.classList.remove('hidden');
+        function selectScenario(scenario) {
+            currentScenario = scenario;
+            ui.mainMenu.classList.add('hidden');
+            ui.backToMenuBtn.classList.remove('hidden');
+            simulationState = { log: [] }; // Reset state
+            
+            switch(scenario) {
+                case 'fusion':
+                    renderFusionSetup();
+                    break;
+                case 'containment':
+                    renderContainmentSetup();
+                    break;
+                case 'patient':
+                    renderPatientSetup();
+                    break;
+            }
         }
 
-        function startSimulation(type) {
-            currentSimulation = type;
-            const config = simulationConfig[type];
-            simulationLog = [];
+        function resetToMenu() {
+            currentScenario = null;
+            ui.simulationContent.innerHTML = '';
+            ui.mainMenu.classList.remove('hidden');
+            ui.backToMenuBtn.classList.add('hidden');
+        }
+        
+        // Render Functions for each scenario
+        function renderFusionSetup() {
+             ui.simulationContent.innerHTML = `
+                <section id="contamination-level-step">
+                    <h2 class="text-2xl font-semibold mb-6 text-center">1. Selecione o Nível de Contaminação da Chuva (CHV)</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        ${Object.keys(contaminationData).map(level => `
+                            <div onclick="setupFusionSim(${level})" class="scenario-card cursor-pointer bg-gray-800 p-6 rounded-lg border-2 border-gray-600 hover:border-cyan-500">
+                                <h3 class="font-orbitron text-xl font-bold text-cyan-400 mb-2">Nível ${level}</h3>
+                                <p class="text-sm text-gray-400">${contaminationData[level].name.split('–')[1].trim()}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+                <div id="fusion-sim-content"></div>`;
+        }
 
-            ui.simulationTitle.textContent = config.title;
-            ui.sample1Label.textContent = config.sampleLabel;
-            ui.sample1Content.className = `blood-content ${config.sampleClass}`;
+        function renderContainmentSetup() {
+            simulationState.environmentalContamination = 85; // Starting high
+            ui.simulationContent.innerHTML = `
+                <section id="containment-sim">
+                    <h2 class="text-2xl font-bold text-center mb-2">Simulação: Contenção Ambiental</h2>
+                    <div class="text-center bg-gray-800/50 border border-gray-700 rounded-lg p-3 mb-6 max-w-4xl mx-auto">
+                        <h4 class="font-orbitron text-lg">Cenário</h4>
+                        <p class="text-sm text-gray-400">Amostras de solo e água próximas ao local da queda do meteoro apresentam alta concentração de Urânio-235, metais pesados e resíduos. A radiação local é de 320-450 µSv/h.</p>
+                    </div>
+                    
+                    <div class="text-center text-2xl font-orbitron text-red-400 mb-8">
+                        Nível de Contaminação Ambiental: <span id="env-contamination-level">${simulationState.environmentalContamination}%</span>
+                        <div class="progress-bar mt-2 max-w-lg mx-auto"><div id="env-contamination-bar" class="progress-bar-fill bg-red-500" style="width: ${simulationState.environmentalContamination}%;"></div></div>
+                    </div>
 
-            const currentContamination = contaminationData[contaminationLevel];
-            ui.contaminationStatus.innerHTML = `<h4 class="font-orbitron text-lg">${currentContamination.name}</h4><p class="text-sm text-gray-400">${currentContamination.details}</p>`;
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="tests-division">
+                        ${renderTestCards(['cie', 'etc', 'lid', 'car'])}
+                    </div>
+                    <div id="results-log" class="mt-8 bg-gray-900/50 p-4 rounded-lg"></div>
+                </section>`;
+        }
 
-            if (type === 'curative') {
-                curePercentage = 68;
-                ui.curePercentageDisplay.textContent = `Eficiência da Cura: ${curePercentage}%`;
-                ui.curePercentageDisplay.classList.remove('hidden');
+        function renderPatientSetup() {
+             ui.simulationContent.innerHTML = `
+                <section id="patient-stage-step">
+                    <h2 class="text-2xl font-semibold mb-6 text-center">1. Selecione o Estágio de Contaminação do Paciente</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        ${Object.keys(patientStages).map(stage => `
+                            <div onclick="setupPatientSim(${stage})" class="scenario-card cursor-pointer bg-gray-800 p-6 rounded-lg border-2 border-gray-600 hover:border-yellow-500">
+                                <h3 class="font-orbitron text-xl font-bold text-yellow-400 mb-2">${patientStages[stage].name}</h3>
+                                <p class="text-sm text-gray-400">${patientStages[stage].details}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+                <div id="patient-sim-content"></div>`;
+        }
+        
+        // Simulation Setup functions
+        function setupFusionSim(level) {
+            simulationState.contaminationLevel = level;
+            document.getElementById('contamination-level-step').classList.add('hidden');
+            document.getElementById('fusion-sim-content').innerHTML = `
+                <div class="text-center mt-10">
+                    <h2 class="text-2xl font-semibold mb-6">2. Selecione o Procedimento de Fusão</h2>
+                    <div class="flex flex-col md:flex-row justify-center items-center gap-6">
+                        <button onclick="runFusionSim('healthy')" class="btn bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-6 rounded-lg w-full md:w-auto">
+                            Fusão com Sangue Saudável
+                        </button>
+                        <button onclick="runFusionSim('curative')" class="btn bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-6 rounded-lg w-full md:w-auto">
+                            Fusão com Sangue Curativo (MET-RX)
+                        </button>
+                    </div>
+                </div>`;
+        }
+
+        function setupPatientSim(stage) {
+            simulationState.patientStage = stage;
+            simulationState.patientStatus = patientStages[stage].name;
+            document.getElementById('patient-stage-step').classList.add('hidden');
+            document.getElementById('patient-sim-content').innerHTML = `
+                 <section id="patient-treatment-sim">
+                    <h2 class="text-2xl font-bold text-center mb-2">Simulação: Tratamento de Paciente</h2>
+                    <div id="patient-status-display" class="text-center text-2xl font-orbitron text-yellow-300 mb-8">
+                        Status do Paciente: <span id="patient-status-text">${simulationState.patientStatus}</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="tests-division">
+                        ${renderTestCards(['cie', 'etc', 'lid', 'car'])}
+                    </div>
+                    <div id="results-log" class="mt-8 bg-gray-900/50 p-4 rounded-lg"></div>
+                </section>`;
+        }
+
+
+        // Main Simulation Runners
+        function runFusionSim(type) {
+             simulationState.fusionType = type;
+             if (type === 'curative') {
+                 simulationState.curePercentage = 68;
+             } else {
+                 simulationState.curePercentage = 0;
+             }
+
+             const config = {
+                healthy: { title: 'Fusão: Sangue Saudável + MET-Vírus25' },
+                curative: { title: 'Fusão: Sangue Curativo MET-RX + MET-Vírus25' }
+             };
+
+            document.getElementById('fusion-sim-content').innerHTML = `
+                <h2 class="text-2xl font-bold text-center mb-2">${config[type].title}</h2>
+                <div class="text-center bg-gray-800/50 border border-gray-700 rounded-lg p-3 mb-6 max-w-4xl mx-auto">
+                    <h4 class="font-orbitron text-lg">CHV ${contaminationData[simulationState.contaminationLevel].name}</h4>
+                    <p class="text-sm text-gray-400">${contaminationData[simulationState.contaminationLevel].details}</p>
+                </div>
+                ${type === 'curative' ? `<div id="cure-percentage-display" class="text-center text-2xl font-orbitron text-yellow-300 mb-8">Eficiência da Cura: ${simulationState.curePercentage}%</div>` : ''}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="tests-division">
+                    ${renderTestCards(['cie', 'etc', 'lid', 'car'])}
+                </div>
+                <div id="results-log" class="mt-8 bg-gray-900/50 p-4 rounded-lg"></div>
+                <div class="text-center mt-10">
+                    <button onclick="showFusionResults()" class="btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg text-lg">
+                        Finalizar e Ver Resultados
+                    </button>
+                </div>`;
+        }
+
+        function showFusionResults() {
+            let resultTitle, resultContentClass;
+            const { fusionType, curePercentage } = simulationState;
+
+            if (fusionType === 'healthy') {
+                resultTitle = "ALERTA: Fusão Instável Concluída";
+                resultContentClass = 'bg-fusion-bad';
             } else {
-                curePercentage = 0;
-                ui.curePercentageDisplay.classList.add('hidden');
+                if (curePercentage >= 100) {
+                    resultTitle = "CURA COMPLETA! O VÍRUS FOI NEUTRALIZADO!";
+                    resultContentClass = 'bg-cure-complete';
+                } else if (curePercentage >= 50) {
+                    resultTitle = `NEUTRALIZAÇÃO PARCIAL: Eficiência final de ${curePercentage}%`;
+                    resultContentClass = 'bg-fusion-good';
+                } else {
+                    resultTitle = `FALHA NA NEUTRALIZAÇÃO: Eficiência final de ${curePercentage}%`;
+                    resultContentClass = 'bg-fusion-bad';
+                }
             }
             
-            ui.fusionSelectionStep.classList.add('hidden');
-            ui.simulationStep.classList.remove('hidden');
-            ui.startFusionBtn.classList.remove('hidden');
-            ui.finishFusionBtn.classList.add('hidden');
-            ui.testsDivision.classList.add('hidden');
+            ui.simulationContent.innerHTML = `
+                <section class="text-center">
+                    <h2 class="text-3xl font-bold mb-6">${resultTitle}</h2>
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-8 bg-gray-800 p-8 rounded-lg border-2 border-gray-700">
+                        <div class="text-center">
+                            <div class="blood-vial mx-auto" style="height: 200px; width: 100px;">
+                                <div class="blood-content ${resultContentClass}"></div>
+                            </div>
+                            <p class="mt-2 font-semibold">Amostra Resultante</p>
+                        </div>
+                        <div class="text-left max-w-2xl w-full">
+                            <h3 class="text-2xl font-semibold mb-4">Relatório de Ações</h3>
+                            <div class="space-y-3 text-gray-300 max-h-96 overflow-y-auto pr-4">${renderLog()}</div>
+                        </div>
+                    </div>
+                </section>`;
         }
-
-        function runFusion() {
-            ui.startFusionBtn.classList.add('hidden');
-            ui.testsDivision.classList.remove('hidden');
-            ui.finishFusionBtn.classList.remove('hidden');
-            document.getElementById('fusion-visualization').style.opacity = '0.5';
+        
+        // Helper functions
+        function renderTestCards(tests) {
+            const testInfo = {
+                cie: { color: 'cyan', description: 'Descreva sua ação científica de análise.' },
+                etc: { color: 'red', description: 'Como você mantém o controle e a segurança?' },
+                lid: { color: 'yellow', description: 'Qual sua ordem ou estratégia para a equipe?' },
+                car: { color: 'green', description: 'Como você documenta ou comunica os achados?' }
+            };
+            return tests.map(test => `
+                <div class="bg-gray-800 p-6 rounded-lg border-2 border-gray-700">
+                    <h3 class="font-orbitron text-xl font-bold text-${testInfo[test].color}-400 mb-2">${test.toUpperCase()}</h3>
+                    <p class="text-gray-400 mb-4 text-sm">${testInfo[test].description}</p>
+                    <input type="text" id="${test}-input" class="w-full bg-gray-900 border border-gray-600 rounded p-2 mb-3 text-white" placeholder="Descreva a ação...">
+                    <button onclick="runAITest('${test}')" class="btn w-full bg-${testInfo[test].color}-600 hover:bg-${testInfo[test].color}-500 text-white font-bold py-2 px-4 rounded flex items-center justify-center gap-2">
+                        <span class="text-btn">Executar</span> <div class="loader hidden"></div>
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        function renderLog() {
+            if (simulationState.log.length === 0) return "<p>Nenhuma ação foi registrada.</p>";
+            return simulationState.log.map(log => `
+                <div class="p-3 bg-gray-900/50 rounded-lg border-l-4 ${log.success ? 'border-green-500' : 'border-red-500'}">
+                    <p><strong>Teste ${log.test}:</strong> ${log.action}</p>
+                    <p class="text-sm italic">"${log.narrative}"</p>
+                    <p class="text-sm font-semibold text-yellow-300">Efeito: ${log.mechanic}</p>
+                </div>
+            `).join('');
         }
 
         async function runAITest(testType) {
@@ -339,31 +391,13 @@
             button.disabled = true;
             buttonText.classList.add('hidden');
             loader.classList.remove('hidden');
-            
-            const resultDiv = document.getElementById(`${testType}-result`);
-            resultDiv.innerHTML = '';
 
             try {
-                // MODIFICADO: URL agora aponta para a nossa função Netlify.
                 const apiUrl = `/.netlify/functions/gemini-proxy`;
+                const { systemPrompt, userPrompt } = buildPrompts(testType, actionDescription);
 
-                const systemPrompt = `Você é um mestre de jogo para um RPG de ficção científica. O cenário é um laboratório tentando curar o MET-Vírus25. Sua tarefa é gerar resultados narrativos e mecânicos para as ações dos jogadores. A resposta DEVE ser um objeto JSON válido, sem markdown ou qualquer outro texto. O efeito mecânico deve incluir uma alteração percentual na cura (ex: "+5% de cura" ou "-10% de cura") se a simulação for curativa, ou um efeito narrativo de recurso (ex: "BI -1" ou "+PES") caso contrário.`;
-                
-                const currentContamination = contaminationData[contaminationLevel];
-                const userPrompt = `
-                    Cenário: A chuva externa tem um nível de contaminação ${currentContamination.name} (${currentContamination.details}).
-                    Simulação Atual: Estamos realizando uma fusão entre ${currentSimulation === 'healthy' ? 'Sangue Saudável' : 'o Sangue Curativo MET-RX'} e o MET-Vírus25. A eficiência de cura atual é de ${curePercentage}%.
-                    Ação do Jogador:
-                    - Tipo de Teste: ${testType.toUpperCase()}
-                    - Descrição: "${actionDescription}"
-                    
-                    Gere o resultado.
-                `;
-                
-                // MODIFICADO: O payload agora contém os prompts para serem processados pela função.
                 const payload = {
-                    userPrompt: userPrompt,
-                    systemPrompt: systemPrompt,
+                    userPrompt, systemPrompt,
                     generationConfig: {
                         responseMimeType: "application/json",
                         responseSchema: {
@@ -381,118 +415,102 @@
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload) // Enviamos o payload para a nossa função.
+                    body: JSON.stringify(payload)
                 });
 
-                // ATUALIZADO: Tratamento de erro melhorado
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({ error: 'Resposta inválida do servidor.' }));
                     throw new Error(errorData.error || `Erro na chamada da função: ${response.statusText}`);
                 }
                 
-                const result = await response.json(); // A resposta agora vem da nossa função Netlify.
+                const result = await response.json();
+                if (result.error) throw new Error(result.error);
 
-                if (result.error) {
-                    throw new Error(result.error);
-                }
+                const aiResult = JSON.parse(result.candidates[0].content.parts[0].text);
+                simulationState.log.push({ test: testType.toUpperCase(), action: actionDescription, ...aiResult });
 
-                const resultText = result.candidates[0].content.parts[0].text;
-                const aiResult = JSON.parse(resultText);
-
-                simulationLog.push({ test: testType.toUpperCase(), action: actionDescription, ...aiResult });
-                
-                updateCurePercentage(aiResult.mechanic);
-                
-                resultDiv.innerHTML = `
-                    <p class="font-semibold ${aiResult.success ? 'text-green-400' : 'text-red-400'}">
-                        ${aiResult.success ? 'SUCESSO' : 'FALHA'}
-                    </p>
-                    <p><strong>Narrativa:</strong> ${aiResult.narrative}</p>
-                    <p><strong>Efeito:</strong> ${aiResult.mechanic}</p>
-                `;
+                updateSimulationState(aiResult.mechanic);
+                document.getElementById('results-log').innerHTML = renderLog();
 
             } catch (error) {
-                console.error("Erro ao executar o teste de IA:", error);
-                // ATUALIZADO: Mostra a mensagem de erro específica
-                resultDiv.innerHTML = `<p class="text-red-500"><b>Erro de comunicação:</b> ${error.message}. Verifique a configuração da função Netlify e a API key.</p>`;
+                console.error("Erro na IA:", error);
+                alert(`Erro de comunicação: ${error.message}. Verifique a configuração da função Netlify e a API key.`);
             } finally {
+                input.value = '';
                 button.disabled = false;
                 buttonText.classList.remove('hidden');
                 loader.classList.add('hidden');
             }
         }
-
-        function updateCurePercentage(mechanic) {
-            if (currentSimulation !== 'curative') return;
-
-            const percentageChange = mechanic.match(/([+-])\s*(\d+)\s*%/);
-            if (percentageChange) {
-                const operator = percentageChange[1];
-                const value = parseInt(percentageChange[2], 10);
-                if (operator === '+') {
-                    curePercentage += value;
-                } else {
-                    curePercentage -= value;
-                }
-                curePercentage = Math.max(0, Math.min(100, curePercentage)); // Clamp between 0 and 100
-                ui.curePercentageDisplay.textContent = `Eficiência da Cura: ${curePercentage}%`;
+        
+        function updateSimulationState(mechanic) {
+            switch(currentScenario) {
+                case 'fusion':
+                    if (simulationState.fusionType === 'curative') {
+                        const change = mechanic.match(/([+-])\s*(\d+)\s*%/);
+                        if (change) {
+                            const value = parseInt(change[2], 10);
+                            simulationState.curePercentage += (change[1] === '+' ? value : -value);
+                            simulationState.curePercentage = Math.max(0, Math.min(100, simulationState.curePercentage));
+                            document.getElementById('cure-percentage-display').textContent = `Eficiência da Cura: ${simulationState.curePercentage}%`;
+                        }
+                    }
+                    break;
+                case 'containment':
+                    const change = mechanic.match(/([+-])\s*(\d+)\s*%/);
+                    if (change) {
+                        const value = parseInt(change[2], 10);
+                        simulationState.environmentalContamination += (change[1] === '+' ? value : -value);
+                        simulationState.environmentalContamination = Math.max(0, Math.min(100, simulationState.environmentalContamination));
+                        const levelEl = document.getElementById('env-contamination-level');
+                        const barEl = document.getElementById('env-contamination-bar');
+                        levelEl.textContent = `${simulationState.environmentalContamination}%`;
+                        barEl.style.width = `${simulationState.environmentalContamination}%`;
+                        if(simulationState.environmentalContamination < 30) barEl.className = 'progress-bar-fill bg-green-500';
+                        else if(simulationState.environmentalContamination < 60) barEl.className = 'progress-bar-fill bg-yellow-500';
+                        else barEl.className = 'progress-bar-fill bg-red-500';
+                    }
+                    break;
+                case 'patient':
+                    const stageChange = mechanic.match(/paciente (melhora|piora|estabiliza)/i);
+                    if (stageChange) {
+                        const outcome = stageChange[1].toLowerCase();
+                        if (outcome === 'melhora') {
+                            simulationState.patientStage = Math.max(1, simulationState.patientStage - 1);
+                        } else if (outcome === 'piora') {
+                            simulationState.patientStage = Math.min(5, simulationState.patientStage + 1);
+                        }
+                        simulationState.patientStatus = patientStages[simulationState.patientStage].name;
+                        if(mechanic.includes("morte") || mechanic.includes("fatal")) {
+                            simulationState.patientStatus = "ÓBITO";
+                        }
+                         document.getElementById('patient-status-text').textContent = simulationState.patientStatus;
+                    }
+                    break;
             }
         }
 
-        function showResults() {
-            ui.simulationStep.classList.add('hidden');
-            ui.resultsStep.classList.remove('hidden');
+        function buildPrompts(testType, actionDescription) {
+            let systemPrompt = `Você é um mestre de jogo para um RPG de ficção científica. O cenário é um complexo tentando resolver uma crise viral-radioativa causada pela queda de um meteoro com Urânio-235. Sua tarefa é gerar resultados narrativos e mecânicos para as ações dos jogadores. A resposta DEVE ser um objeto JSON válido.`;
+            let userPrompt = `Ação do Jogador: Teste ${testType.toUpperCase()} - "${actionDescription}".\n`;
             
-            let resultHTML = '';
-            simulationLog.forEach(log => {
-                resultHTML += `
-                    <div class="p-3 bg-gray-900/50 rounded-lg mb-2 border-l-4 ${log.success ? 'border-green-500' : 'border-red-500'}">
-                        <p><strong>Teste ${log.test}:</strong> ${log.action}</p>
-                        <p class="text-sm italic">"${log.narrative}"</p>
-                        <p class="text-sm font-semibold text-yellow-300">Efeito Mecânico: ${log.mechanic}</p>
-                    </div>
-                `;
-            });
-
-            if (simulationLog.length === 0) {
-                 resultHTML = "<p>Nenhum teste foi realizado durante a simulação.</p>";
+            switch(currentScenario) {
+                case 'fusion':
+                    systemPrompt += `O efeito mecânico deve ser uma alteração percentual na cura (ex: "+5% de cura") se a simulação for curativa, ou um efeito de recurso (ex: "BI -1") caso contrário.`;
+                    userPrompt += `Cenário: Fusão em laboratório. CHV Nível ${simulationState.contaminationLevel}. Fusão com ${simulationState.fusionType}. Eficiência de cura atual: ${simulationState.curePercentage}%.`;
+                    break;
+                case 'containment':
+                    systemPrompt += `O efeito mecânico deve ser uma alteração percentual no Nível de Contaminação Ambiental (ex: "-10% de contaminação").`;
+                    userPrompt += `Cenário: Contenção ambiental de solo e água com Urânio-235. Nível de contaminação atual: ${simulationState.environmentalContamination}%.`;
+                    break;
+                case 'patient':
+                    systemPrompt += `O efeito mecânico deve ser uma alteração no estado do paciente (ex: "paciente melhora", "paciente piora", "paciente estabiliza"). O resultado pode ser fatal.`;
+                    userPrompt += `Cenário: Tratamento de um paciente humano. Estado atual: ${simulationState.patientStatus}.`;
+                    break;
             }
-
-            ui.resultDetails.innerHTML = resultHTML;
-
-            if (currentSimulation === 'healthy') {
-                ui.resultTitle.textContent = "ALERTA: Fusão Instável Concluída";
-                ui.resultContent.className = 'blood-content bg-fusion-bad';
-            } else {
-                 if (curePercentage >= 100) {
-                    ui.resultTitle.textContent = "CURA COMPLETA! O VÍRUS FOI NEUTRALIZADO!";
-                    ui.resultContent.className = 'blood-content bg-cure-complete';
-                } else if (curePercentage >= 50) {
-                    ui.resultTitle.textContent = `NEUTRALIZAÇÃO PARCIAL: Eficiência final de ${curePercentage}%`;
-                    ui.resultContent.className = 'blood-content bg-fusion-good';
-                } else {
-                    ui.resultTitle.textContent = `FALHA NA NEUTRALIZAÇÃO: Eficiência final de ${curePercentage}%`;
-                    ui.resultContent.className = 'blood-content bg-fusion-bad';
-                }
-            }
+            return { systemPrompt, userPrompt };
         }
 
-        function resetSimulation() {
-            contaminationLevel = null;
-            currentSimulation = null;
-            
-            ui.contaminationStep.classList.remove('hidden');
-            ui.fusionSelectionStep.classList.add('hidden');
-            ui.simulationStep.classList.add('hidden');
-            ui.resultsStep.classList.add('hidden');
-            
-            document.getElementById('fusion-visualization').style.opacity = '1';
-            
-            ['cie', 'etc', 'lid', 'car'].forEach(testType => {
-                document.getElementById(`${testType}-input`).value = '';
-                document.getElementById(`${testType}-result`).innerHTML = '';
-            });
-        }
     </script>
 </body>
 </html>
